@@ -46,13 +46,10 @@ def getLinesListFromSourceFile(filename):
 
 
 def getDatabaseFromFile(filename):
-	with open(filename, 'rb') as file:
-		database.append(pickle.load(file))
-		# while 1:
-		# 	try:
-		# 		database = pickle.load(file))
-		# 	except EOFError:
-		# 		break
+	database = []
+	for i in range(3):
+		with open(filename, 'rb') as file:
+			database.append(pickle.load(file))
 	return database
 	# with open(filename, 'r') as file:
 	# 	database = file.readlines();
@@ -152,31 +149,48 @@ def main(argv):
 		database = getDatabaseFromFile(outputFile)
 		
 	else:
-		wfile = open(outputFile, 'wb')
 		file = open("out.txt", 'w')
+		database = []
 		for i in range(len(urls)):	
 			createDataFile(sourceFile, urls[i])
 			linesList =  getLinesListFromSourceFile(sourceFile)
-			database = makeDatabase(linesList, entries[i])
-			pickle.dump(database, wfile)
-			for data in database:
+			smallerDB = makeDatabase(linesList, entries[i])
+			for data in smallerDB:
 				file.write("%s\n" % data)
 
-		wfile.close()
+			database.append(smallerDB)
+
 		file.close()
 
+		pickleFile = open(outputFile, 'wb')
+		pickle.dump(database, pickleFile)
+		pickleFile.close()
+
 	lookupName = argv[0]
-	for i in range(len(urls)):
-		with open(outputFile, 'rb') as file:
-			database = pickle.load(file)
-			# print database[1]
-			print len(database)
-		for line in database:
+
+	# flag = True;
+	print len(database)
+	for smallerDb in database:
+		# print len(smallerDb)
+		for line in smallerDb:
 			if lookupName in (line["player1"], line["player2"]):
 				print line
-				# todo - uncomment
-				# return
-	print "No record found"
+	# for i in range(len(urls)):
+	# 	# with open(outputFile, 'rb') as file:
+	# 	# 	database = pickle.load(file)
+	# 		# print database[1]
+	# 	print len(database)
+	# 	for smallerDb in database:
+	# 		if smallerDb == database:
+	# 			print "yes"
+	# 		print len(smallerDb)
+	# 		print smallerDb
+	# 		for line in smallerDb:
+	# 			if lookupName in (line["player1"], line["player2"]):
+	# 				print line
+	# 			# todo - uncomment
+	# 			# return
+	# print "No record found"
 
 	# if len(argv) == 1:
 	# 	lookupName = argv[0]
