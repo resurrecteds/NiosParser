@@ -128,6 +128,14 @@ def saveTest():
 
 	dict = {"a":"fddf", "b":"43434"}
 
+def  printPlayers(line):
+	print "player1:  " + line["player1"]
+	print "player2:  " + line["player2"]
+	print "rank:     %d" % line["rank"]
+	print "wins:     " + line["wins"]
+	print "loses:    " + line["loses"]
+	print "rate:     " + line["rate"]
+	print "score:    " + line["score"]
 
 def main(argv):
 	urls = ["http://nios.kr/sc2/eu/2v2/hots/", "http://nios.kr/sc2/eu/2v2/hots/2", "http://nios.kr/sc2/eu/2v2/hots/3"]
@@ -165,20 +173,28 @@ def main(argv):
 		pickle.dump(database, pickleFile)
 		pickleFile.close()
 
-	lookupName = argv[0].lower()
+	player1 = argv[0].lower()
+	player2 = argv[1].lower()
 
-	# flag = True;
-	print len(database)
 	for smallerDb in database:
 		# print len(smallerDb)
 		for line in smallerDb:
-			if lookupName in (line["player1"].lower(), line["player2"].lower()):
-				print line
+			(a, b) = line["player1"].lower(), line["player2"].lower()
+			if player1 in (a, b) or player2 in (a, b):
+				printPlayers(line)
+			
+
+
+
+				
 
 
 
 if __name__ == '__main__':
 	args = sys.argv
 	if len(args) == 1:
-		args.append("Splash")
+		args.append("")
+		args.append("")
+	if len(args) == 2:
+		args.append("")
 	main(args[1:])
